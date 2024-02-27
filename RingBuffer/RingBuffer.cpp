@@ -20,21 +20,21 @@
 
 CRingBuffer::CRingBuffer()
 {
-	Data = (char*)malloc(DEFAULFBUFFER);
-	Front = Data + 1;
-	RearPos = Data;
+	data = (char*)malloc(DEFAULFBUFFER);
+	front = data + 1;
+	RearPos = data;
 }
 
 CRingBuffer::CRingBuffer(int iBufferSize)
 {
-	Data = (char*)malloc(iBufferSize);
-	Front = Data + 1;
-	RearPos = Data;
+	data = (char*)malloc(iBufferSize);
+	front = data + 1;
+	RearPos = data;
 }
 
 CRingBuffer::~CRingBuffer()
 {
-	free(Data);
+	free(data);
 }
 
 void CRingBuffer::Resize(int size)
@@ -45,7 +45,7 @@ void CRingBuffer::Resize(int size)
 int CRingBuffer::GetBufferSize()
 {
 	/* 실제 사용 데이터는 -1 rear값은 못씀*/
-	int heapSize = _msize(Data) - 1;
+	int heapSize = _msize(data) - 1;
 	return heapSize;
 }
 
@@ -62,9 +62,9 @@ int CRingBuffer::Enqueue(const char* chpData, int iSize)
 
 	/*front가 roop 돌고 0번째 값 안넣었을 경우 Rear와 겹치게됨.
 		사실 RearPos는 -1을 가르키고 있어야 한다. 그러나 그럴 순 없으니 예외처리*/
-	if (Front == RearPos)
+	if (front == RearPos)
 	{
-		if (Front == Data)
+		if (front == data)
 		{
 
 		}
@@ -109,7 +109,7 @@ int CRingBuffer::Enqueue(const char* chpData, int iSize)
 	}
 
 	/* rear에 걸치는지 확인*/
-	char* frontCheck = Front;
+	char* frontCheck = front;
 	int real_range = 0;
 	bool frontCheckBreak = false;
 
@@ -119,7 +119,7 @@ int CRingBuffer::Enqueue(const char* chpData, int iSize)
 		{
 			if (frontCheck == RearPos)
 			{
-				if (frontCheck == Data)
+				if (frontCheck == data)
 				{
 
 				}
@@ -151,7 +151,7 @@ int CRingBuffer::Enqueue(const char* chpData, int iSize)
 
 		if (!frontCheckBreak)
 		{
-			frontCheck = Data;
+			frontCheck = data;
 
 			for (int i = 0; i < _secondMove; ++i)
 			{
@@ -171,8 +171,8 @@ int CRingBuffer::Enqueue(const char* chpData, int iSize)
 	{
 		for (int i = 0; i < real_range; ++i)
 		{
-			*Front = *inputData;
-			++Front;
+			*front = *inputData;
+			++front;
 			++inputData;
 
 			++inputSize;
@@ -205,8 +205,8 @@ int CRingBuffer::Enqueue(const char* chpData, int iSize)
 
 		for (int i = 0; i < _firstMove; ++i)
 		{
-			*Front = *inputData;
-			++Front;
+			*front = *inputData;
+			++front;
 			++inputData;
 
 			++inputSize;
@@ -215,14 +215,14 @@ int CRingBuffer::Enqueue(const char* chpData, int iSize)
 
 		if (noInit)
 		{
-			Front = Data;
+			front = data;
 			if (front_counting > _bufferSize)
 				front_counting = 0;
 		}
 		for (int i = 0; i < _secondMove; ++i)
 		{
-			*Front = *inputData;
-			++Front;
+			*front = *inputData;
+			++front;
 			++inputData;
 
 			++inputSize;
@@ -339,7 +339,7 @@ int CRingBuffer::Dequeue(char* chpDest, int iSize)
 
 		/* 분할이 되었다는 것은 초기로 돌아간다는 것*/
 		rear_counting = 0;
-		RearPos = Data;
+		RearPos = data;
 
 		/* 초기는 ++하고 값을 빼면 안됨 */
 
@@ -499,7 +499,7 @@ int CRingBuffer::Peek(char* chpDest, int iSize)
 
 		/* 분할이 되었다는 것은 초기로 돌아간다는 것*/
 		fake_rear_counting = 0;
-		fake_RearPos = Data;
+		fake_RearPos = data;
 
 		/* 초기는 ++하고 값을 빼면 안됨 */
 
@@ -647,7 +647,7 @@ int CRingBuffer::MoveRear(int iSize)
 
 		/* 분할이 되었다는 것은 초기로 돌아간다는 것*/
 		rear_counting = 0;
-		RearPos = Data;
+		RearPos = data;
 
 		/* 초기는 ++하고 값을 빼면 안됨 */
 
